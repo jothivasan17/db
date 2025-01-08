@@ -1,0 +1,283 @@
+
+
+--------------------------------------------------------------MONGO DB----------------------------------------------------------------
+
+1. Insert the following values in emp collection
+To insert values, you would use the insertMany operation. Below is an example of how you would insert documents into the emp collection.
+
+db.emp.insertMany([
+  { eno: 7839, ename: "KING", salary: 5000, deptno: 10, comm: 500 },
+  { eno: 7566, ename: "JONES", salary: 2975, deptno: 20, comm: 300 },
+  { eno: 7698, ename: "BLAKE", salary: 2850, deptno: 30, comm: 150 },
+  { eno: 7782, ename: "CLARK", salary: 2450, deptno: 10, comm: 200 },
+  { eno: 7788, ename: "SCOTT", salary: 3000, deptno: 20, comm: 400 },
+  // Add other employees as necessary
+]);
+
+
+------------------------------------------------------------------------------------------------------------------------------
+2. Update salary of each employee by 200
+MongoDB's updateMany can be used to increase the salary for all employees.
+
+
+db.emp.updateMany(
+  {},
+  { $inc: { salary: 200 } }
+);
+
+------------------------------------------------------------------------------------------------------------------------------
+3. Update salary of eno 7566 to 3000
+This can be done using the updateOne operation.
+
+db.emp.updateOne(
+  { eno: 7566 },
+  { $set: { salary: 3000 } }
+);
+
+------------------------------------------------------------------------------------------------------------------------------
+4. Insert one empty row
+MongoDB does not have empty rows as in SQL, but you can insert an empty document (with no fields or only a few fields).
+
+
+db.emp.insertOne({});
+
+
+------------------------------------------------------------------------------------------------------------------------------
+5. Delete the employee with ename = 'Adams'
+To delete a document where ename is 'Adams', you can use the deleteOne method.
+
+db.emp.deleteOne({ ename: "Adams" });
+
+------------------------------------------------------------------------------------------------------------------------------
+6. Select all values from the table emp
+In MongoDB, use the find method to retrieve all documents from the collection.
+
+
+db.emp.find();
+
+
+------------------------------------------------------------------------------------------------------------------------------
+7. Select eno, ename of employees with salary > 3000
+You can use the find method with a query to filter the results by salary.
+
+
+db.emp.find(
+  { salary: { $gt: 3000 } },
+  { eno: 1, ename: 1 }
+);
+
+------------------------------------------------------------------------------------------------------------------------------
+8. Select all employees whose salary is > 2000 and < 3000
+This is a range query, and can be done using the $gt (greater than) and $lt (less than) operators.
+
+javascript
+Copy code
+db.emp.find(
+  { salary: { $gt: 2000, $lt: 3000 } }
+);
+
+------------------------------------------------------------------------------------------------------------------------------
+9. Select all employees except managers
+Assuming that a "manager" has a specific value in a field (e.g., job: "MANAGER"), the query would be:
+
+javascript
+Copy code
+db.emp.find(
+  { job: { $ne: "MANAGER" } }
+);
+
+
+------------------------------------------------------------------------------------------------------------------------------
+10. Select list of all employees whose name starts with ‘J’
+MongoDB allows string matching with a regular expression. To match names starting with 'J':
+
+javascript
+Copy code
+db.emp.find(
+  { ename: { $regex: "^J", $options: "i" } }
+);
+
+
+------------------------------------------------------------------------------------------------------------------------------
+11. Select list of all employees whose name is of length 4
+MongoDB doesn’t directly support string length queries, but you can use the $where operator to execute a JavaScript expression.
+
+javascript
+Copy code
+db.emp.find(
+  { $where: "this.ename.length == 4" }
+);
+
+------------------------------------------------------------------------------------------------------------------------------
+12. Select eno, ename, salary of all employees working in deptno 10 & 20
+You can use the $in operator to match either of the department numbers.
+
+
+db.emp.find(
+  { deptno: { $in: [10, 20] } },
+  { eno: 1, ename: 1, salary: 1 }
+);
+
+------------------------------------------------------------------------------------------------------------------------------
+13. Select list of employees whose 3rd letter of ename is ‘r’
+You can use regular expressions to match specific characters in a string.
+
+db.emp.find(
+  { ename: { $regex: "^.{2}r" } }
+);
+
+------------------------------------------------------------------------------------------------------------------------------
+14. Select list of employees who don’t get commission
+Assuming comm field is null for employees who don’t get a commission:
+
+db.emp.find(
+  { comm: { $eq: null } }
+);
+
+------------------------------------------------------------------------------------------------------------------------------
+15. Select eno, ename, salary of all employees by increasing salary by 200 while displaying
+You can use the $add operator to temporarily increase the salary value during the query.
+
+
+db.emp.aggregate([
+  { $project: { eno: 1, ename: 1, salary: { $add: ["$salary", 200] } } }
+]);
+
+
+------------------------------------------------------------------------------------------------------------------------------
+16. Display eno of all managers of each dept
+Assuming managers are identified by job: "MANAGER":
+
+
+db.emp.find(
+  { job: "MANAGER" },
+  { eno: 1, deptno: 1 }
+);
+
+------------------------------------------------------------------------------------------------------------------------------
+
+
+17. Save all changes made to table
+MongoDB automatically commits changes as they are made, so there is no explicit "save" command like in SQL. However, you can use db.save() or update to apply changes.
+
+
+db.emp.save(<document>);  // For a specific document
+These MongoDB queries are similar to the SQL operations you outlined, but they use MongoDB’s native query language and document-oriented structure.
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+1. Sharding Setup
+You have created a database (vysya) and collections (movie and movie1), and enabled sharding for the database and specifically for the movie1 collection. Here's a summary of the steps:
+
+Sharding Steps:
+Create Collections:
+
+
+db.createCollection("movie");
+db.createCollection("movie1");
+Enable Sharding for the Database (vysya): You enabled sharding on the vysya database:
+------------------------------------------------------------------------------------------------------------------------------
+
+sh.enableSharding("vysya");
+Shard a Collection (movie1): Then, you sharded the collection movie1 based on a shard key:
+
+------------------------------------------------------------------------------------------------------------------------------
+
+sh.shardCollection("vysya.movie1", {"title": "Vis"});
+Check Shard Distribution: After sharding the collection, you checked the shard distribution for movie1:
+------------------------------------------------------------------------------------------------------------------------------
+
+
+db.movie1.getShardDistribution();
+This confirms that the collection movie1 is now sharded.
+
+Sharding Status: You checked the overall sharding status with sh.status():
+
+------------------------------------------------------------------------------------------------------------------------------
+
+
+sh.status();
+From this output:
+
+The sharding cluster consists of two shards (shard0000 and shard0001), which are located at Natz:27000 and Natz:27001.
+The vysya database has been successfully sharded.
+
+------------------------------------------------------------------------------------------------------------------------------
+
+2. Replica Set Setup
+In the second part, you attempted to set up a Replica Set. Here's the breakdown of your actions:
+
+Replica Set Setup:
+Checking the Replica Set Status: You checked the status of the replica set using rs.status() but encountered an error:
+
+
+rs.status();
+The error indicates that MongoDB is not running with replication enabled:
+
+
+"errmsg" : "not running with --replSet", "code" : 76, "codeName": "NoReplicationEnabled"
+Initiate the Replica Set: You attempted to initiate a replica set by specifying three members (replica set nodes):
+
+------------------------------------------------------------------------------------------------------------------------------
+
+
+rs.initiate({
+  _id: "rs0",
+  members: [
+    { _id: 0, host: "mongodb0:27017" },
+    { _id: 1, host: "mongodb1:27017" },
+    { _id: 2, host: "mongodb2:27017" }
+  ]
+});
+This command should initialize the replica set with three nodes: mongodb0, mongodb1, and mongodb2.
+
+------------------------------------------------------------------------------------------------------------------------------
+
+MongoDB URI for Connecting to the Replica Set: After initiating the replica set, you connected to it using the MongoDB URI that includes the replica set name (rs0):
+
+bash
+
+mongo 'mongodb://mongodb0,mongodb1,mongodb2/?replicaSet=rs0'
+Check Replication Info: You attempted to run rs.printReplicationInfo() to check the replication status but encountered issues with the replica set not being fully configured yet.
+
+Issues You Might Be Facing:
+Replication Not Enabled: The error "not running with --replSet" suggests that your MongoDB instances are not started with replication enabled. To resolve this, you need to start your MongoDB instances with the --replSet option.
+
+Example command to start a MongoDB instance with replication enabled:
+
+------------------------------------------------------------------------------------------------------------------------------
+
+bash
+
+mongod --replSet rs0 --bind_ip localhost,<hostname_or_ip>
+Ensuring Replica Set Configuration: After initiating the replica set with rs.initiate(), make sure all the nodes (mongodb0, mongodb1, and mongodb2) are properly configured and running.
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Check the Status After Replica Set Initiation: After initiating the replica set, check the status again:
+
+
+rs.status();
+Ensure MongoDB is Running on the Correct Ports: Verify that the MongoDB instances are accessible on the correct ports (27017, 27018, 27019, etc.) on your host machines.
+
+Next Steps to Troubleshoot and Confirm:
+Start MongoDB with --replSet Flag: Ensure each MongoDB instance in the replica set is started with the --replSet option.
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Confirm Replica Set Status: After starting MongoDB with replication enabled, run:
+
+rs.status();
+Check MongoDB Logs: Look at the MongoDB log files on each node for any potential errors or issues related to replication or sharding.
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Verify Sharding is Active: Since you have already enabled sharding for the vysya database, verify that the shard keys are correctly applied and ensure data distribution across shards using:
+
+db.movie1.getShardDistribution();

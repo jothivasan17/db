@@ -1,0 +1,135 @@
+mysql> create table customer(Cust_id  int PRIMARY KEY,cust_name  text,city 
+text,occupation text);  
+Query OK, 0 rows affected  (0.84 sec)  
+
+mysql> create table order1(order_id int PRIMARY KEY,prod_name text,price text);  
+Query OK, 0 rows affected  (0.89 sec)  
+
+mysql> show tables;  
+
++-----  -+  
+| Tables_in_vvt  |  
++-----  -+  
+| customer  |  
+| mca  |  
+| mcadet  |  
+| order1  |  
++-----  -+  
+4 rows in set (0.10 sec)  
+
+mysql> insert into customer values(1001,'NATARAJAN S','RASIPURAM','ASST_PROF');  
+Query OK, 1 row affected  (0.28 sec)  
+
+mysql> insert into customer values(1002,'SUNDAR','SALEM','ASST_PROF');  
+Query OK, 1 row affected  (0.17 sec)  
+
+mysql> insert into customer values(1003,'SURESH','ATHUR','ASST_PROF');  
+Query OK, 1 row affected  (0.14 sec)  
+
+mysql> insert into customer values(1004,'UDAY','SALEM','ASST_PROF');  
+Query OK, 1 row affected (0.34 sec)  
+
+mysql> insert into customer values(1005,'MUNIYASAMY','AIYOTHIYA','ASST_PROF');  
+Query OK, 1 row affected  (0.09 sec)  
+
+mysql>  SELECT * FROM CUSTOMER;  
+
++-----    -+  +-  -+  -+  
+| Cust_id  | cust_name  | city  | occupation  |  
++-----    -+  +-  -+  -+  
+|  
+|  
+|  
+|  
+|  
+1001 | NATARAJAN  S | RASIPURAM | ASST_PROF  |  
+1002 | SUNDAR  | SALEM  | ASST_PROF |  
+1003 | SURESH  | ATHUR  | ASST_PROF |  
+1004 | UDAY  | SALEM  | ASST_PROF |  
+1005 | MUNIYASAMY  | AIYOTHIYA  | ASST_PROF  |  
++-----    -+  +-  -+  -+  
+5 rows in set (0.00 sec)  
+mysql>  insert into order1 values(1001,'LAPTOP','1000000');  
+Query OK, 1 row affected (0.14 sec)  
+mysql>  insert  into order1 values(1002,'MOBILE','10000');  
+Query  
+OK, 1 row affected (0.12 sec)  
+mysql>  insert  into  order1 values(1003,'TV','15000');  
+Query OK, 1 row affected (0.08 sec)  
+mysql>  insert  into order1 values(1004,'RECHARGE','1500');  
+Query OK, 1 row affected (0.15 sec)  
+.  
+mysql>  insert  into order1 values(1005,'BAG','4500');  
+Query OK, 1 row affected (0.08 sec)  
+
+
+
+mysql> show tables;  
++-----  -+  
+| Tables_in_vvt  |  
++-----  -+  
+| customer  |  
+| mca  |  
+| mcadet  |  
+| order1  |  
++-----  -+  
+4 rows in set (0.00 sec)  
+
+
+
+
+mysql> DESCRIBE customer;  
++-----  -+  -+  -+  +  +  -+  
+| Field  | Type | Null | Key | Default  | Extra |  
++-----  -+  -+  -+  +  +  -+  
+| Cust_id  | int  | NO  | PRI | NULL  |  |  
+| cust_name  | text | YES  |  | NULL  |  |  
+| city  | text | YES  |  | NULL  |  |  
+| occupation  | text | YES  |  | NULL  |  |  
++-----  -+  -+  -+  +  +  -+  
+4 rows in set (0.00 sec) 
+mysql> DESCRIBE ORDER1;  
++-----  +  +  +  +-  +-  +  
+| Field  | Type | Null | Key | Default  | Extra  |  
++-----  +  +  +  +-  +-  +  
+| order_id  | int  | NO  | PRI | NULL  |  |  
+| prod_name  | text | YES  |  | NULL  |  |  
+| price  | text | YES  |  | NULL  |  |  
++-----  +  +  +  +-  +-  +  
+
+3 rows in  set (0.04 sec)  
+---------------------------------------------------------------------------------------------------
+mysql>  CREATE TEMPORARY TABLE temp_customers 
+ ->  SELECT c.cust_name,  c.city, o.prod_name, o.price 
+ ->  FROM order1 o  
+ ->  INNER JOIN customer  c ON c.cust_id  = o.order_id 
+ ->  ORDER BY o.price DESC;  
+Query OK, 5 rows affected (0.11 sec)  
+Records: 5 Duplicates:  0  Warnings:  0  
+
+-----------------------------------------------------------------------------------------------------
+mysql> show tables;  
++-----  -+  
+| Tables_in_vvt  |  
++-----  -+  
+| customer  |  
+| mca  |  
+| mcadet  |  
+| order1  |  
++-----  -+  
+4 rows in set (0.07 sec)  
+mysql>  select * from temp_customers;  
+
+ 
++-----  +-  -+  +  +  
+| cust_name  | city  | prod_name | price  |  
++-----  +-  -+  +  +  
+ 
+| MUNIYASAMY  | AIYOTHIYA  | BAG  | 4500  |  
+| SURESH  | ATHUR  | TV  | 15000  |  
+| UDAY  | SALEM  | RECHARGE  | 1500  |  
+| NATARAJAN  S | RASIPURAM  | LAPTOP  | 1000000 |  
+| SUNDAR  | SALEM  | MOBILE  | 10000  |  
++-----  +-  -+  +  +  
+5 rows in set (0.00 sec)  
+mysql> 

@@ -1,0 +1,23 @@
+<books> 
+<book category="XML"> 
+<title lang="en">Learn XQuery in 24 hours</title> 
+<author>Robert</author> 
+<author>Peter</author> 
+<college>Vysya</college> 
+<year>2013</year> 
+<price>50.00</price> 
+</book> 
+<book category="XML"> 
+<title lang="en">Learn XPath in 24 hours</title> 
+<author>Jay Ban</author> 
+<college>Vysya</college> 
+<year>2010</year> 
+<price>16.50</price> 
+</book> 
+</books> 
+
+
+PROGRAM 2: (Book.xqy) 
+for $x in doc("books.xml")/books/book 
+where $x/price > 30 
+return string($x/title) 

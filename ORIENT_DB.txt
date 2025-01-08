@@ -1,0 +1,157 @@
+
+
+STEPS TO INSTALL
+
+1. docker pull orientdb
+
+2.docker run -d -p 2424:2424 -p 2480:2480 --name orientdb orientdb
+
+3.http://localhost:2480
+
+4. docker exec -it orientdb /bin/bash
+
+5. Start the OrientDB Console in the Container
+
+To open the OrientDB console inside the container, use the following command:
+
+  	docker exec -it orientdb /bin/bash
+
+6. CREATE DATABASE plocal:/orientdb/databases/mydb graph plocal
+7. CREATE USER john IDENTIFIED BY johnpass ROLE admin;
+8. CONNECT plocal:/orientdb/databases/mydb john johnpass
+
+
+
+
+
+-----------------------------------------------------------------------------
+
+1. CREATE CLASS emp;
+
+2. CREATE CLASS emp EXTENDS V;  
+
+3. CREATE PROPERTY emp.eno INTEGER;
+CREATE PROPERTY emp.ename STRING;
+CREATE PROPERTY emp.salary INTEGER;
+CREATE PROPERTY emp.deptno INTEGER;
+CREATE PROPERTY emp.comm INTEGER;
+
+
+
+-----------------------------------------------------------------------------
+
+Insert values:
+
+INSERT INTO emp (eno, ename, salary, deptno, comm) VALUES (...);
+Update salary:
+
+
+-----------------------------------------------------------------------------
+2.
+
+UPDATE emp SET salary = salary + 200;
+Update salary for eno = 7566:
+-----------------------------------------------------------------------------
+
+3.
+
+UPDATE emp SET salary = 3000 WHERE eno = 7566;
+Insert an empty row:
+
+-----------------------------------------------------------------------------
+4.
+
+INSERT INTO emp (eno, ename, salary, deptno, comm) VALUES (null, null, null, null, null);
+Delete an employee:
+-----------------------------------------------------------------------------
+
+5
+
+DELETE FROM emp WHERE ename = 'Adams';
+Select all records:
+
+-----------------------------------------------------------------------------
+6.
+
+
+SELECT * FROM emp;
+Select employees with salary > 3000:
+
+-----------------------------------------------------------------------------
+
+7.
+
+SELECT eno, ename FROM emp WHERE salary > 3000;
+Select employees with salary between 2000 and 3000:
+
+-----------------------------------------------------------------------------
+8.
+
+SELECT * FROM emp WHERE salary > 2000 AND salary < 3000;
+Select employees excluding managers:
+
+-----------------------------------------------------------------------------
+9.
+
+SELECT * FROM emp WHERE comm = null;
+Select employees whose name starts with 'J':
+
+
+-----------------------------------------------------------------------------
+10.
+
+SELECT * FROM emp WHERE ename LIKE 'J%';
+Select employees whose name length is 4:
+
+
+-----------------------------------------------------------------------------
+11.
+
+SELECT * FROM emp WHERE LENGTH(ename) = 4;
+Select employees working in deptno 10 or 20:
+
+-----------------------------------------------------------------------------
+12.
+
+SELECT eno, ename, salary FROM emp WHERE deptno IN [10, 20];
+Select employees whose 3rd letter of ename is 'r':
+
+-----------------------------------------------------------------------------
+13.
+
+SELECT * FROM emp WHERE SUBSTRING(ename, 3, 1) = 'r';
+Select employees without commission:
+
+-----------------------------------------------------------------------------
+14.
+
+SELECT * FROM emp WHERE comm IS NULL OR comm = 0;
+Select employees with updated salary:
+
+-----------------------------------------------------------------------------
+15.
+
+SELECT eno, ename, salary + 200 AS new_salary FROM emp;
+Select all managers:
+
+-----------------------------------------------------------------------------
+16. 
+
+SELECT eno, deptno FROM emp WHERE comm > 0;
+Commit changes:
+-----------------------------------------------------------------------------
+17. SAVE
+COMMIT;
+
+
+-----------------------------
+
+
+create vertex vysya set name='tamil',class='I_MCA'  
+create vertex vysya set name='ragul',class='I_MCA'  
+create edge from  #43:0 to #44:0  
+create edge from #43:0 to #45:0  
+create edge from #46:0 to #46:0  
+create edge from #43:1 to #44:0  
+create edge from #44:1 to #45:0  
+select *from  vysya; 

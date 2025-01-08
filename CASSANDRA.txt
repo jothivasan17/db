@@ -1,0 +1,197 @@
+
+
+-------------------------------------------------------------CASSANDRA DB QURIES---------------------------------------------------------------------------------------------------------
+
+1.   docker pull cassandra /docker pull cassandra:4.0
+
+2.docker run --name cassandra -d -p 9042:9042 cassandra
+
+3. docker ps
+
+4.docker exec -it cassandra cqlsh
+
+
+
+
+Create a Keyspace in Cassandra
+A Keyspace in Cassandra is equivalent to a database in SQL systems. To create a keyspace:
+
+
+
+CREATE KEYSPACE IF NOT EXISTS my_keyspace WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
+
+This creates a keyspace named my_keyspace with a replication factor of 1. You can adjust the replication_factor based on your needs. For production, a replication factor of 3 is recommended.
+
+
+USE my_keyspace;
+
+Create a table. For example, to create an emp table:
+
+
+CREATE TABLE IF NOT EXISTS emp (
+  eno INT PRIMARY KEY,
+  ename TEXT,
+  salary INT,
+  deptno INT,
+  comm INT
+);
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1. Insert the following values in the emp table
+Assuming the table already exists, to insert data, you can use INSERT statements. Here's an example of inserting employee records into the emp table.
+
+cql
+Copy code
+CREATE TABLE IF NOT EXISTS emp (
+  eno INT PRIMARY KEY,
+  ename TEXT,
+  salary INT,
+  deptno INT,
+  comm INT
+);
+
+INSERT INTO emp (eno, ename, salary, deptno, comm) VALUES (7839, 'KING', 5000, 10, 500);
+INSERT INTO emp (eno, ename, salary, deptno, comm) VALUES (7566, 'JONES', 2975, 20, 300);
+INSERT INTO emp (eno, ename, salary, deptno, comm) VALUES (7698, 'BLAKE', 2850, 30, 150);
+INSERT INTO emp (eno, ename, salary, deptno, comm) VALUES (7782, 'CLARK', 2450, 10, 200);
+INSERT INTO emp (eno, ename, salary, deptno, comm) VALUES (7788, 'SCOTT', 3000, 20, 400);
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2. Update salary of each employee by 200
+Cassandra doesn't support the UPDATE ALL functionality in a single command as SQL databases do, so you need to update each row individually.
+
+cql
+Copy code
+UPDATE emp SET salary = salary + 200 WHERE eno = 7839;
+UPDATE emp SET salary = salary + 200 WHERE eno = 7566;
+UPDATE emp SET salary = salary + 200 WHERE eno = 7698;
+UPDATE emp SET salary = salary + 200 WHERE eno = 7782;
+UPDATE emp SET salary = salary + 200 WHERE eno = 7788;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3. Update salary of eno 7566 to 3000
+You can directly update the salary for the employee with eno 7566.
+
+cql
+Copy code
+UPDATE emp SET salary = 3000 WHERE eno = 7566;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+4. Insert one empty row
+In Cassandra, you can't insert an entirely empty row, but you can insert a row with null values for some fields.
+
+cql
+Copy code
+INSERT INTO emp (eno, ename, salary, deptno, comm) VALUES (9999, null, null, null, null);
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+5. Delete the employee with ename = 'Adams'
+In Cassandra, you can't delete based on non-primary key fields directly. You need to find the eno for the employee named 'Adams' first and then delete by eno.
+
+First, retrieve the eno for 'Adams':
+
+cql
+Copy code
+SELECT eno FROM emp WHERE ename = 'Adams';
+Then, delete by eno:
+
+cql
+Copy code
+DELETE FROM emp WHERE eno = 1234;  -- Assuming 1234 is the `eno` for 'Adams'
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+6. Select all values from the table emp
+cql
+Copy code
+SELECT * FROM emp;
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+7. Select eno, ename of employees with salary > 3000
+cql
+Copy code
+SELECT eno, ename FROM emp WHERE salary > 3000;
+Note: You may need an index on salary to perform this query efficiently, because Cassandra requires a primary key or indexed column for filtering.
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+8. Select all employees whose salary is > 2000 and < 3000
+cql
+Copy code
+SELECT * FROM emp WHERE salary > 2000 AND salary < 3000;
+Again, you would need an index on salary to run this query efficiently.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+9. Select all employees except managers
+Assuming that you identify managers via a job field (which you would need to add to the table schema), you could do something like this:
+
+cql
+Copy code
+SELECT * FROM emp WHERE job != 'MANAGER';
+If you don't have the job field, you would need to filter by another column or logic (e.g., filtering ename by pattern or querying comm).
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+10. Select list of all employees whose name starts with ‘J’
+To select employees whose name starts with 'J', you would typically use a LIKE query. However, Cassandra does not support LIKE queries for full-text search. Instead, you could create a secondary index on the ename field to support such queries:
+
+cql
+Copy code
+SELECT * FROM emp WHERE ename LIKE 'J%';
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+11. Select list of all employees whose name is of length 4
+Cassandra doesn't support direct string length filtering. You would have to filter this data at the application level after retrieving it.
+
+cql
+Copy code
+SELECT * FROM emp;
+Then, filter in your application code based on ename.length() == 4.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+12. Select eno, ename, salary of all employees working in deptno 10 & 20
+cql
+Copy code
+SELECT eno, ename, salary FROM emp WHERE deptno IN (10, 20);
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+13. Select list of employees whose 3rd letter of ename is ‘r’
+Cassandra does not support queries based on specific letter positions. You would need to handle this logic in your application after retrieving the data.
+
+cql
+Copy code
+SELECT * FROM emp;
+Then, filter in your application where the 3rd letter is 'r'.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+14. Select list of employees who don’t get a commission
+Assuming comm is null for employees who don't get commission:
+
+cql
+Copy code
+SELECT * FROM emp WHERE comm IS NULL;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+15. Select eno, ename, salary of all employees by increasing salary by 200 while displaying
+Cassandra does not support direct calculation during the SELECT query. You would need to first retrieve the data and then process it in your application.
+
+cql
+Copy code
+SELECT eno, ename, salary FROM emp;
+Then, in your application, increase the salary by 200 while displaying the results.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+16. Display eno of all managers of each dept
+Assuming that you have a job field to identify managers:
+
+cql
+Copy code
+SELECT eno, deptno FROM emp WHERE job = 'MANAGER';
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+17. Save all changes made to table
+In Cassandra, changes are automatically persisted, so there is no need to explicitly "save" the changes as in SQL databases. All updates and inserts are written immediately to the database.
+

@@ -1,0 +1,18 @@
+import mysql.connector 
+ 
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="kamal"
+    )
+mycursor = mydb.cursor()
+sql = "INSERT INTO mca (Name, College) VALUES (%s, %s)"
+val = ("Uday", "salem")
+mycursor.execute(sql, val)
+mydb.commit()
+print(mycursor.rowcount, "record inserted.")
+mycursor.execute("SELECT * FROM mca")
+myresult = mycursor.fetchall()
+for x in myresult:
+    print(x)   

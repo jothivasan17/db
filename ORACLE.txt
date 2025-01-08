@@ -1,0 +1,168 @@
+STEPS TO INSTALL ORACLE:
+
+1. docker pull oracle/database:19.3.0-ee
+
+2. docker run -d -p 1521:1521 -p 5500:5500 --name oracle-db oracle/database:19.3.0-ee
+
+3. docker logs -f oracle-db
+	DATABASE IS READY TO USE!
+
+4. docker exec -it oracle-db bash
+
+5. sqlplus sys as sysdba
+
+6. WEB INTERFACE
+	http://localhost:5500/em
+
+DOCKER RUNNING COMMAND AND ENV VARIBLE
+
+docker run -d -p 1521:1521 -p 5500:5500 --name oracle-db -v /path/to/local/directory:/opt/oracle/oradata oracle/database:19.3.0-ee
+
+docker run -d -p 1521:1521 -p 5500:5500 --name oracle-db -e ORACLE_PWD=my_password oracle/database:19.3.0-ee
+----------------------------------------------------------------------------------------------------------------------
+
+>>sqlplus
+>>sqlplus scott/1234@localhost:1521/orcl
+>>CREATE USER scott IDENTIFIED BY 1234;
+>>GRANT CONNECT, RESOURCE TO scott;
+>>CREATE TABLE emp (
+    eno     NUMBER(4) PRIMARY KEY,      -- Employee number (4 digits)
+    ename   VARCHAR2(20),               -- Employee name (up to 20 characters)
+    job     VARCHAR2(20),               -- Job title (up to 20 characters)
+    mgr     NUMBER(4),                  -- Manager (employee number of the manager)
+    hiredate DATE,                      -- Hire date of the employee
+    sal     NUMBER(7,2),                -- Salary (up to 7 digits, 2 decimals)
+    comm    NUMBER(7,2),                -- Commission (up to 7 digits, 2 decimals, can be NULL)
+    deptno  NUMBER(2)                   -- Department number (2 digits)
+);
+
+----------------------------------------------------------------------------------------------------------------------
+
+
+
+1. Insert the following values into the emp table:
+
+INSERT INTO emp (eno, ename, job, mgr, hiredate, sal, comm, deptno) 
+VALUES (7839, 'KING', 'President', NULL, TO_DATE('1981-06-09', 'YYYY-MM-DD'), 5000, NULL, 10);
+
+INSERT INTO emp (eno, ename, job, mgr, hiredate, sal, comm, deptno) 
+VALUES (7566, 'JONES', 'Manager', 7839, TO_DATE('1981-03-19', 'YYYY-MM-DD'), 2975, NULL, 20);
+
+INSERT INTO emp (eno, ename, job, mgr, hiredate, sal, comm, deptno) 
+VALUES (7698, 'BLAKE', 'Manager', 7839, TO_DATE('1981-05-01', 'YYYY-MM-DD'), 2850, NULL, 30);
+
+-- Add more employee rows as needed.
+
+----------------------------------------------------------------------------------------------------------------------
+
+2. Update the salary of each employee by 200:
+
+UPDATE emp SET sal = sal + 200;
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+
+3. Update the salary of employee with eno = 7566 to 3000:
+
+UPDATE emp SET sal = 3000 WHERE eno = 7566;
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+4. Insert one empty row:
+
+INSERT INTO emp (eno, ename, job, mgr, hiredate, sal, comm, deptno) 
+VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+5. Delete the employee with ename = 'Adams':
+
+DELETE FROM emp WHERE ename = 'Adams';
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+
+6. Select all values from the emp table:
+
+SELECT * FROM emp;
+
+----------------------------------------------------------------------------------------------------------------------
+
+7. Select eno and ename of employees whose salary is greater than 3000:
+
+SELECT eno, ename FROM emp WHERE sal > 3000;
+
+----------------------------------------------------------------------------------------------------------------------
+
+8. Select all employees whose salary is between 2000 and 3000:
+
+SELECT * FROM emp WHERE sal > 2000 AND sal < 3000;
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+9. Select all employees except managers (assuming managers have a job title of 'Manager'):
+
+SELECT * FROM emp WHERE job != 'Manager';
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+10. Select list of all employees whose name starts with 'J':
+
+SELECT * FROM emp WHERE ename LIKE 'J%';
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+11. Select list of all employees whose name is of length 4:
+
+SELECT * FROM emp WHERE LENGTH(ename) = 4;
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+12. Select eno, ename, and salary of all employees working in departments 10 and 20:
+
+
+SELECT eno, ename, sal FROM emp WHERE deptno IN (10, 20);
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+13. Select list of employees whose 3rd letter of ename is 'r':
+
+SELECT * FROM emp WHERE SUBSTR(ename, 3, 1) = 'r';
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+14. Select list of employees who don’t get a commission (assuming comm is NULL if no commission):
+
+SELECT * FROM emp WHERE comm IS NULL;
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+15. Select eno, ename, salary of all employees, increasing their salary by 200 while displaying:
+
+SELECT eno, ename, sal + 200 AS updated_sal FROM emp;
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+16. Display eno of all managers of each department (assuming managers have a job title of 'Manager'):
+
+SELECT eno, deptno FROM emp WHERE job = 'Manager';
+
+----------------------------------------------------------------------------------------------------------------------
+17. Save all changes made to the table:
+sql
+Copy code
+COMMIT;
+
+

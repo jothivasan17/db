@@ -1,0 +1,37 @@
+package xyz; 
+import com.mongodb.MongoClient; 
+import com.mongodb.DB; 
+import com.mongodb.DBCollection; 
+import com.mongodb.DBCursor; 
+import javax.microedition.midlet.MIDlet; 
+import javax.microedition.lcdui.Display; 
+import javax.microedition.lcdui.TextBox; 
+public class Main extends MIDlet { 
+private Display display; 
+public void startApp() { 
+display = Display.getDisplay(this); 
+
+MongoClient mongoClient = new MongoClient("localhost", 27017); 
+DB db = mongoClient.getDB("test"); 
+DBCollection collection = db.getCollection("SSSIT"); 
+
+DBCursor cursor = collection.find(); 
+
+StringBuilder results = new StringBuilder(); 
+
+while (cursor.hasNext()) { 
+results.append(cursor.next().toString()).append("\n"); 
+} 
+
+TextBox textBox = new TextBox("MongoDB Records", results.toString(), 1024, 
+TextBox.NO_INPUT); 
+display.setCurrent(textBox); 
+} 
+public void pauseApp() { 
+
+} 
+
+public void destroyApp(boolean unconditional) { 
+notifyDestroyed(); 
+} 
+}
