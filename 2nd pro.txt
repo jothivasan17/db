@@ -1,0 +1,56 @@
+-- Step 1: Create the 'Vysya' database
+
+CREATE DATABASE Vysya;
+
+-- Step 2: Switch to the 'Vysya' database
+
+USE Vysya;
+
+-- Step 3: Create the 'MCA' table
+
+CREATE TABLE MCA (
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(45) NOT NULL,
+    Dept VARCHAR(35) NOT NULL,
+    age INT NOT NULL,
+    Coll VARCHAR(40) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+-- Step 4: Insert records into the 'MCA' table
+
+INSERT INTO MCA (id, name, Dept, age, Coll)
+VALUES (102, 'Natarajan', 'cs', 30, 'vysya');
+
+INSERT INTO MCA (id, name, Dept, age, Coll)
+VALUES (101, 'Munish', 'cs', 32, 'vysya');
+
+-- Step 5: View the records in the 'MCA' table
+
+SELECT * FROM MCA;
+
+-- Step 6: Update a record
+
+UPDATE MCA 
+SET name = 'Munish', age = 36 
+WHERE id = 102;
+
+-- Step 7: View the updated records
+
+SELECT * FROM MCA;
+
+-- Step 8: Delete a record
+
+DELETE FROM MCA WHERE id = 102;
+
+-- Step 9: View the records after deletion
+
+SELECT * FROM MCA;
+
+-- Step 10: Drop the 'MCA' table
+
+DROP TABLE MCA;
+
+-- Step 11: Drop the 'Vysya' database
+
+DROP DATABASE Vysya;
